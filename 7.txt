@@ -1,0 +1,42 @@
+%pip install mlxtend --upgrade
+
+from pandas import read_csv
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from mlxtend.evaluate import bias_variance_decomp
+# load dataset
+url = 'https://raw.githubusercontent.com/jbrownlee/Datasets/master/housing.csv'
+dataframe = read_csv(url, header=None)
+# separate into inputs and outputs
+data = dataframe.values
+X, y = data[:, :-1], data[:, -1]
+#split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
+#define the model
+model=LinearRegression()
+# estimate bias and variance
+mse, bias, var = bias_variance_decomp (model, X_train, y_train, X_test, y_test, loss='mse', num_rounds=200, random_seed=1)
+# summarize results
+print('MSE: %.3f' % mse)
+print('Bias: %.3f' % bias)
+print('Variance: %.3f' % var)
+
+import pandas as pd
+data = {
+    "A":["TeamA", "TeamB", "TeamB","TeamC","TeamA"],
+    "B":[50,40,40,30,50],
+    "C":[True,False,False,False,True]
+}
+df=pd.DataFrame(data)
+display(df.drop_duplicates())
+
+from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import KFold, cross_val_score
+X,y=datasets.load_iris(return_X_y=True)
+clf = DecisionTreeClassifier(random_state=42)
+k_folds=KFold(n_splits=5)
+scores=cross_val_score(clf,X,y,cv=k_folds)
+print("Cross validation scores:", scores)
+print("Average CV score:", scores.mean())
+print("Number of CV scores used in Average:",len(scores))
